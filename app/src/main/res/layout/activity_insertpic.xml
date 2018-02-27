@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="fill_parent"
+
+    android:layout_height="fill_parent"
+
+    android:background="#ffffff"
+
+    android:orientation="vertical"
+
+    android:weightSum="1">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <TextView
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+
+            android:gravity="center_horizontal"
+
+            android:text="게시글 업로드"
+
+            android:textColor="#c12929"
+
+            android:textSize="40sp" />
+
+
+        <EditText
+            android:id="@+id/boardtitle"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:gravity="center_horizontal"
+
+            android:hint="제목을 입력해주세요"
+            android:text=""
+            android:textColor="#000000"
+
+            android:textSize="20sp" />
+
+        <TextView
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:gravity="center_horizontal"
+
+            android:text="사진을 한 장을 골라주세요!"
+
+            android:textColor="#000000"
+
+            android:textSize="20sp" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
+
+            android:layout_marginTop="20sp"
+
+            android:orientation="vertical"
+
+            >
+
+            <ImageView
+
+                android:id="@+id/user_image"
+
+                android:layout_width="200dp"
+
+                android:layout_height="200dp"
+
+                android:layout_gravity="center"
+
+                android:adjustViewBounds="true"
+
+                android:maxHeight="200dp"
+
+                android:maxWidth="200dp"
+
+
+                android:onClick="onClick" />
+
+            <Button
+
+                android:id="@+id/btn_UploadPicture"
+
+                android:layout_width="200dp"
+
+                android:layout_height="30dp"
+
+                android:layout_gravity="center"
+
+                android:background="#93a5d9"
+
+                android:onClick="onClick"
+
+                android:text="사진 선택"
+
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center">
+
+
+        </LinearLayout>
+
+
+        <Button
+
+            android:id="@+id/btn_signupfinish"
+
+            android:layout_width="230dp"
+
+            android:layout_height="30dp"
+
+            android:layout_gravity="center"
+
+            android:layout_marginTop="30dp"
+
+            android:background="#000000"
+
+            android:onClick="onClick"
+
+            android:text="사진 업로드"
+
+            android:textColor="#ffffff" />
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "605899602725",
+    "firebase_url": "https://couplememories-196504.firebaseio.com",
+    "project_id": "couplememories-196504",
+    "storage_bucket": "couplememories-196504.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605899602725:android:75efac31de221e08",
+        "android_client_info": {
+          "package_name": "com.example.googlemap.googlemap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605899602725-k2q101phc476bbf4165aqn1m8jvfvdmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.googlemap.googlemap",
+            "certificate_hash": "b3d881c312bcb8812d2499ab2deb718243d56577"
+          }
+        },
+        {
+          "client_id": "605899602725-d7vn5noiobak84qep0fhkruumraim5rm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk7VFxkrBpBRaTX47OIoK8ypqkaOAOtsw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605899602725-d7vn5noiobak84qep0fhkruumraim5rm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
