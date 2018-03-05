@@ -18,16 +18,17 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     // ...
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference myRef = database.child("couple1").child("object").child("title");
-    TextView tv;
 
+    TextView tv;
+    String id;
+    String coupleid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Intent intent=getIntent();
+        id=intent.getStringExtra("id");
+        coupleid=intent.getStringExtra("coupleid");
     }
 
     public void buttonClick(View v) {
@@ -39,76 +40,35 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.bt2:
                 Intent insertpicture = new Intent(this, com.example.googlemap.googlemap.insertpicture.class);
-                startActivity(insertpicture);
 
+                insertpicture.putExtra("coupleid", coupleid);
+                insertpicture.putExtra("id",id);
+                startActivity(insertpicture);
                 break;
 
             case R.id.bt3:
 
-                Intent intent3 = new Intent(this, com.example.googlemap.googlemap.chatActivity.class);
-                startActivity(intent3);
+                Intent chat = new Intent(this, com.example.googlemap.googlemap.chatActivity.class);
+                chat.putExtra("coupleid", coupleid);
+                chat.putExtra("id",id);
+                startActivity(chat);
                 break;
 
             case R.id.bt4:
                 // Write a message to the database
-                mDatabase.child("couple1").child("object").child("title").setValue("바뀌니?");
-
-                /*
-                myRef.setValue("Hello, World!");
-
-                // Read from the database
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-                        String value = dataSnapshot.getValue(String.class);
-                        Log.d("태그", "Value is: " + value);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.w("태그", "Failed to read value.", error.toException());
-                    }
-                });*/
+                Intent intent5 = new Intent(this, readboardActivity.class);
+                startActivity(intent5);
                 break;
+            case R.id.btlogout:
+                // Write a message to the database
+
+                Intent intent4 = new Intent(this, LoginActivity.class);
+                startActivity(intent4);
+                break;
+
+
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String title = dataSnapshot.getValue(String.class);
-                tv = findViewById(R.id.textview1);
-                tv.setText(title);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-
-                String s = data.getStringExtra("returnData");
-                Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-
-            }
-        }
-
-
-    }
 }
 

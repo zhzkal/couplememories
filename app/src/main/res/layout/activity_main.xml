@@ -25,7 +25,7 @@
         android:id="@+id/bt2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="사진올리기"
+        android:text="기억 공유하기"
         android:onClick="buttonClick"
 
         />
@@ -33,7 +33,7 @@
         android:id="@+id/bt3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="커플채팅"
+        android:text="커플 채팅"
         android:onClick="buttonClick"
 
         />
@@ -41,8 +41,17 @@
         android:id="@+id/bt4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DB테스트"
+        android:text="기억 읽어오기"
         android:onClick="buttonClick"
 
         />
+    <Button
+        android:id="@+id/btlogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        android:onClick="buttonClick"
+
+        />
+
 </LinearLayout>
