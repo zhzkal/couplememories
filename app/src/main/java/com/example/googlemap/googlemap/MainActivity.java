@@ -1,19 +1,10 @@
 package com.example.googlemap.googlemap;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.bt4:
                 // Write a message to the database
-                Intent intent5 = new Intent(this, com.example.googlemap.googlemap.readboardActivity.class);
+                Intent intent5 = new Intent(this, BoardreadActivity.class);
                 startActivity(intent5);
                 break;
             case R.id.btlogout:
