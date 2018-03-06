@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.bt4:
                 // Write a message to the database
-                Intent intent5 = new Intent(this, readboardActivity.class);
+                Intent intent5 = new Intent(this, com.example.googlemap.googlemap.readboardActivity.class);
                 startActivity(intent5);
                 break;
             case R.id.btlogout:

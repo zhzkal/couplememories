@@ -147,8 +147,11 @@ public class insertpicture extends AppCompatActivity {
             long now = System.currentTimeMillis();
             Date date = new Date(now);
             String filename = formatter.format(date) + ".png";
-
-            BoardData boardData = new BoardData(String.valueOf(ETtitle.getText()),userName , "images/" + filename, String.valueOf(ETtext.getText()), coupleid);
+            SimpleDateFormat formatter2 = new SimpleDateFormat("hh:mm");
+            long now2 = System.currentTimeMillis();
+            Date date2 = new Date(now2);
+            String nowdate2 = formatter2.format(date2);
+            BoardData boardData = new BoardData(String.valueOf(ETtitle.getText()),userName , "images/" + filename, String.valueOf(ETtext.getText()), coupleid,nowdate2);
             databaseReference.child("board").push().setValue(boardData);  // 기본 database 하위 message라는 child에 chatData를 list로 만들기
 
             //storage 주소와 폴더 파일명을 지정해 준다.

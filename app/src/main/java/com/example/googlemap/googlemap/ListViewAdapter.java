@@ -20,7 +20,7 @@ public class ListViewAdapter extends BaseAdapter {
     private ArrayList<BoardData> listViewItemList = new ArrayList<BoardData>();
 
     // ListViewAdapter의 생성자
-    public ListViewAdapter() {
+    public ListViewAdapter(readboardActivity readboardActivity, int item, ArrayList<BoardData> item_list) {
 
     }
 
@@ -82,4 +82,5 @@ public class ListViewAdapter extends BaseAdapter {
         item.setCoupleid(coupleid);
         listViewItemList.add(item);
     }
+
 }

@@ -40,6 +40,17 @@ public class BoardData {
 
     public BoardData(){};
 
+    @Override
+    public String toString() {
+        return "BoardData{" +
+                "title='" + title + '\'' +
+                ", ID='" + ID + '\'' +
+                ", picture='" + picture + '\'' +
+                ", content='" + content + '\'' +
+                ", coupleid='" + coupleid + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 
     public void setTitle(String title) {
         this.title = title;
