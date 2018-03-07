@@ -147,7 +147,7 @@ public class insertpicture extends AppCompatActivity {
             long now = System.currentTimeMillis();
             Date date = new Date(now);
             String filename = formatter.format(date) + ".png";
-            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyyMMdd.hh:mm");
+            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyyMMdd_hh:mm");
             long now2 = System.currentTimeMillis();
             Date date2 = new Date(now2);
             String nowdate2 = formatter2.format(date2);

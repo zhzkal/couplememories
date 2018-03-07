@@ -1,5 +1,6 @@
 package com.example.googlemap.googlemap;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,7 +32,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class BoardreadActivity extends AppCompatActivity {
-    EditText editText;
 
     ListView listView;
     Adapter adapter;
@@ -46,6 +46,7 @@ public class BoardreadActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
 
         adapter = new Adapter();
+        listView.setAdapter(adapter);
         databaseReference.child("board").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -53,7 +54,7 @@ public class BoardreadActivity extends AppCompatActivity {
 
                 Log.d("asdf",boardData.toString());
                 adapter.addItem(boardData);
-
+                listView.setAdapter(adapter);
             }
 
 
@@ -80,7 +81,7 @@ public class BoardreadActivity extends AppCompatActivity {
         });
 
 
-        listView.setAdapter(adapter);
+
 
 
         /*editText = (EditText) findViewById(R.id.editText);
@@ -105,7 +106,13 @@ public class BoardreadActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "선택 : " + item.getTitle(), Toast.LENGTH_LONG).show();
             //미리보기 누르면 일로옴
                 //인텐트 이동해서 다 보여주고 댓글달까?? 생각해보자
+                Intent readmain = new Intent(BoardreadActivity.this, com.example.googlemap.googlemap.ReadmainActivity.class);
 
+                readmain.putExtra("coupleid", item.getCoupleid());
+                readmain.putExtra("id",item.getID());
+                readmain.putExtra("date",item.getDate());
+                readmain.putExtra("title",item.getTitle());
+                startActivity(readmain);
 
 
             }

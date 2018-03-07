@@ -22,6 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -68,43 +71,67 @@ public class chatActivity extends Activity {
                 ChatData chatData = new ChatData(userName, editText.getText().toString(), coupleid, 0, nowdate);  // 유저 이름과 메세지로 chatData 만들기
                 databaseReference.child("message").push().setValue(chatData);  // 기본 database 하위 message라는 child에 chatData를 list로 만들기
                 editText.setText("");
+                listView.setSelection(adapter.getCount() );
             }
         });
 
-        databaseReference.child("message").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
+        ChildEventListener childEventListener = databaseReference.child("message").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("계속 실행되는거지?", "응그럴걸");
                 ChatData chatData = dataSnapshot.getValue(ChatData.class);// chatData를 가져오고
                 String readcheck = "";
+
+
                 if (chatData.getCoupleID().equals(coupleid)) {//커플아이디가 같아야 보이며
 
                     if (chatData.getReadcheck() == 1) {
                         readcheck = "";//읽음
+
                     } else {
                         readcheck = "1";//읽지 않음
                     }
 
-                    if (chatData.getUserName().equals(userName) && chatData.getReadcheck() == 1) {
-                        //여긴 내 메세지이며 읽음 체크되어있는것이 오는곳
+                    if (chatData.getUserName().equals(userName)) {
+                        //여긴 내 메세지
+                        Log.d("단말기",userName);
+                        Log.d("디비",chatData.getUserName());
+
 
                     } else {
-
-                        count[0] = count[0] + 1;
-                        NotificationManager notificationManager = (NotificationManager) chatActivity.this.getSystemService(chatActivity.this.NOTIFICATION_SERVICE);
-                        Intent intent1 = new Intent(chatActivity.this.getApplicationContext(), MainActivity.class); //인텐트 생성.
-
-
-                        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-                        intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);//현재 액티비티를 최상으로 올리고, 최상의 액티비티를 제외한 모든 액티비티를
+                        if (chatData.getReadcheck() == 1) {
+                            //읽은건 알람이 필요없지
+                        } else {
 
 
-                        PendingIntent pendingNotificationIntent = PendingIntent.getActivity(chatActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                        //PendingIntent는 일회용 인텐트 같은 개념입니다.
-                        builder.setSmallIcon(R.drawable.on)
-                                .setNumber(count[0]).setContentTitle(chatData.getUserName()).setContentText(chatData.getMessage())
-                                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingNotificationIntent);
-                        //해당 부분은 API 4.1버전부터 작동합니다.
+                            try{
+                                //수정부분분
+                               //안읽은거 알람처리해야함 1으로 바꿔주자
+                                String key = dataSnapshot.getKey();
+                                databaseReference.child("message").child(key).child("readcheck").setValue(1);  // 기본 database 하위 message라는 child에 chatData를 list로 만들기
+
+                                Log.d("거창하기는","아니네 여기옴??"+key);
+
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                                Log.d("거창하기는","여기온거지?");
+                            }
+                            count[0] = count[0] + 1;
+                            NotificationManager notificationManager = (NotificationManager) chatActivity.this.getSystemService(chatActivity.this.NOTIFICATION_SERVICE);
+                            Intent intent1 = new Intent(chatActivity.this.getApplicationContext(), MainActivity.class); //인텐트 생성.
+
+
+                            Notification.Builder builder = new Notification.Builder(getApplicationContext());
+                            intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);//현재 액티비티를 최상으로 올리고, 최상의 액티비티를 제외한 모든 액티비티를
+
+
+                            PendingIntent pendingNotificationIntent = PendingIntent.getActivity(chatActivity.this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                            //PendingIntent는 일회용 인텐트 같은 개념입니다.
+                            builder.setSmallIcon(R.drawable.on)
+                                    .setNumber(count[0]).setContentTitle(chatData.getUserName()).setContentText(chatData.getMessage())
+                                    .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingNotificationIntent);
+                            //해당 부분은 API 4.1버전부터 작동합니다.
 
 //setSmallIcon - > 작은 아이콘 이미지
 //setnumber-> 알람 숫자
@@ -116,12 +143,13 @@ public class chatActivity extends Activity {
 
 //setConentText->푸쉬내용
 
-                        notificationManager.notify(1, builder.build()); // Notification send
+                            notificationManager.notify(1, builder.build()); // Notification send
 
-                        count[0] = 0;
+                            count[0] = 0;
+                        }
                     }
                     adapter.add(chatData.getUserName() + ": " + chatData.getMessage() + " " + readcheck + " " + chatData.getDate());  // adapter에 추가합니다.
-                    listView.setSelection(adapter.getCount() - 1);
+                    listView.setSelection(adapter.getCount() );
 
 
                 }
