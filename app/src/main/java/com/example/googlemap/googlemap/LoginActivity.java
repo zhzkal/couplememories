@@ -1,20 +1,24 @@
 package com.example.googlemap.googlemap;
 
 import android.content.Intent;
-import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -23,10 +27,13 @@ import java.util.ArrayList;
  */
 
 public class LoginActivity extends AppCompatActivity {
-
-
+    BoardData boardData;
+    Uri uridata;
+    Gpsdata gpsdata;
+    ArrayList<Gpsdata> gpslist=new ArrayList<>();
+    ArrayList<Uri> urilist=new ArrayList<Uri>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference("member");
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
     EditText id;
     EditText pw;
     int check = 0;
@@ -38,9 +45,64 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
+        databaseReference.child("board").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                boardData = dataSnapshot.getValue(BoardData.class);// chatData를 가져오고
+                float a = (float) boardData.getLatitude();
+                float b = (float) boardData.getLongitude();
+                //다운로드할 파일을 가르키는 참조 만들기
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReferenceFromUrl("gs://couplememories-196504.appspot.com");
+
+
+                StorageReference pathReference = storageReference.child(boardData.getPicture());
+                //Url을 다운받기
+                pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        uridata=uri;
+                        urilist.add(uridata);
+                        Log.d("여기는?", String.valueOf(uridata));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
+                Log.d("여기도?", String.valueOf(a));
+
+                gpsdata= new Gpsdata(a,b,boardData.getTitle());
+                gpslist.add(gpsdata);
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
+
         // 데이터베이스 읽기 #3. ChildEventListener
 
-        FirebaseDatabase.getInstance().getReference().child("member").addChildEventListener(new ChildEventListener() {
+        databaseReference.child("member").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -96,6 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                             Intent gomain = new Intent(this, MainActivity.class);
                             gomain.putExtra("id", String.valueOf(id.getText()));
                             gomain.putExtra("coupleid", memberdata.get(i).getCoupleid());
+                            gomain.putExtra("gpslist",gpslist);
+                            //gomain.putExtra("urilist",urilist);
                             startActivity(gomain);
                             check = 1;
                         }

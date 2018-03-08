@@ -12,6 +12,36 @@ public class BoardData {
     private String content;
     private String coupleid;
     private String date;
+    private double latitude;
+    private double longitude;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public BoardData(String title, String ID, String picture, String content, String coupleid, String date, double latitude, double longitude) {
+
+        this.title = title;
+        this.ID = ID;
+        this.picture = picture;
+        this.content = content;
+        this.coupleid = coupleid;
+        this.date = date;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public String getDate() {
         return date;

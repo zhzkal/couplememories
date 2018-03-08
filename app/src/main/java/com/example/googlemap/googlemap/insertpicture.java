@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.app.ProgressDialog;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.database.Cursor;
 
 import android.graphics.Bitmap;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 
 import android.nfc.Tag;
@@ -110,7 +112,16 @@ public class insertpicture extends AppCompatActivity {
         });
 
     }
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
 
+        CursorLoader cursorLoader = new CursorLoader(this, contentUri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
     //결과 처리
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,8 +148,18 @@ public class insertpicture extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");
             progressDialog.show();
+            ExifInterface exifInterface = null;
+            Log.d("성공", getRealPathFromURI(filePath));
 
+            try {
+                 exifInterface = new ExifInterface(getRealPathFromURI(filePath));
 
+                Log.d("성공","어 오네");
+            } catch (IOException e) {
+                Log.d("실패","실패잼");
+                e.printStackTrace();
+            }
+            GeoDegree geoDegree = new GeoDegree(exifInterface);
             //storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -151,7 +172,21 @@ public class insertpicture extends AppCompatActivity {
             long now2 = System.currentTimeMillis();
             Date date2 = new Date(now2);
             String nowdate2 = formatter2.format(date2);
-            BoardData boardData = new BoardData(String.valueOf(ETtitle.getText()),userName , "images/" + filename, String.valueOf(ETtext.getText()), coupleid,nowdate2);
+            double la=0;
+            double lo=0;
+            try {
+                la=geoDegree.getLatitude();
+                lo=geoDegree.getLongitude();
+            }catch (Exception e){
+                Log.d("la", String.valueOf(la));
+                Log.d("lo", String.valueOf(lo));
+            }
+
+
+
+
+
+            BoardData boardData = new BoardData(String.valueOf(ETtitle.getText()),userName , "images/" + filename, String.valueOf(ETtext.getText()), coupleid,nowdate2,la,lo);
             databaseReference.child("board").push().setValue(boardData);  // 기본 database 하위 message라는 child에 chatData를 list로 만들기
 
             //storage 주소와 폴더 파일명을 지정해 준다.
