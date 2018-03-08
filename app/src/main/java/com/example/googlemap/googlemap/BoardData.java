@@ -14,6 +14,27 @@ public class BoardData {
     private String date;
     private double latitude;
     private double longitude;
+    String key;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public BoardData(String title, String ID, String picture, String content, String coupleid, String date, double latitude, double longitude, String key) {
+        this.title = title;
+        this.ID = ID;
+        this.picture = picture;
+        this.content = content;
+        this.coupleid = coupleid;
+        this.date = date;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.key = key;
+    }
 
     public double getLatitude() {
         return latitude;

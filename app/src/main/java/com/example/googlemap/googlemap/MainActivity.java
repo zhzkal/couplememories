@@ -3,6 +3,7 @@ package com.example.googlemap.googlemap;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -23,7 +24,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,17 +41,75 @@ public class MainActivity extends AppCompatActivity {
     TextView tv;
     String id;
     String coupleid;
+    int ddaycount=0;
+    int nextdday=0;
+    TextView tvdday;
+    TextView tvdday2;
+    int firstday;
+    String nextdaytext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent=getIntent();
+        gpslist = (ArrayList<Gpsdata>) getIntent().getSerializableExtra("gpslist");
+
         id=intent.getStringExtra("id");
         coupleid=intent.getStringExtra("coupleid");
-        gpslist = (ArrayList<Gpsdata>) getIntent().getSerializableExtra("gpslist");
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        String nowdate = formatter.format(date);
+//지금날짜
+        String year=nowdate.substring(0,4);
+        String month= nowdate.substring(4,6);
+        String day= nowdate.substring(6,8);
+
+
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Calendar todaCal = Calendar.getInstance(); //오늘날자 가져오기
+            Calendar ddayCal = Calendar.getInstance(); //오늘날자를 가져와 변경시킴
+            String year2=coupleid.substring(0,4);
+            String month2= coupleid.substring(4,6);
+            String day2= coupleid.substring(6,8);
+
+            ddayCal.set(Integer.parseInt(year2),Integer.parseInt(month2)-1,Integer.parseInt(day2));// D-day의 날짜를 입력
+            Log.e("테스트",simpleDateFormat.format(todaCal.getTime()) + "");
+            Log.e("테스트",simpleDateFormat.format(ddayCal.getTime()) + "");
+
+            long today = todaCal.getTimeInMillis()/86400000; //->(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
+            long dday = ddayCal.getTimeInMillis()/86400000;
+            long count = today - dday; // 오늘 날짜에서 dday 날짜를 빼주게 됩니다.
+            ddaycount= (int) count;
+
+            if(ddaycount%100>ddaycount%365){
+                firstday=ddaycount/365;
+                nextdday=  ddaycount%365;
+                nextdday=365-nextdday;
+                nextdaytext=firstday+"주년 -";
+            }else{
+                firstday=ddaycount/100;
+                firstday=firstday+1;
+                nextdday=ddaycount%100;
+                nextdday=100-nextdday;
+                nextdaytext=firstday+"00일 -";
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+
+        }
+        tvdday=findViewById(R.id.ddayplus);
+        tvdday.setText("D-day+"+ddaycount);
+        tvdday2=findViewById(R.id.nextdday);
+        tvdday2.setText(nextdaytext+nextdday);
+
         //urilist = (ArrayList<Uridata>) getIntent().getParcelableExtra("urilist");
-
-
        /* for (int i=0;i<gpslist.size();i++){
             Log.d("결과는?", String.valueOf(gpslist.get(i).getLatitude()));
             Log.d("결과는?", String.valueOf(gpslist.get(i).getLongitude()));

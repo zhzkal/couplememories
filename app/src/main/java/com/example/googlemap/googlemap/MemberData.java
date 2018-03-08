@@ -4,7 +4,7 @@ package com.example.googlemap.googlemap;
  * Created by SCITMASTER on 2018-02-28.
  */
 
-public class MemberData {
+public class MemberData  {
 
     String id;
     String pw;

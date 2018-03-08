@@ -1,5 +1,8 @@
 package com.example.googlemap.googlemap;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ReadmainActivity extends AppCompatActivity {
@@ -46,6 +52,10 @@ public class ReadmainActivity extends AppCompatActivity {
     TextView tvdate;
     TextView tvcontent;
     ImageView ivimg;
+    String key;
+    EditText commentet;
+    Button commentbt;
+    ListView commentlistView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +66,16 @@ public class ReadmainActivity extends AppCompatActivity {
         coupleid = intent.getStringExtra("coupleid");
         date = intent.getStringExtra("date");
         title = intent.getStringExtra("title");
+        key = intent.getStringExtra("key");
 
         tvtitle = findViewById(R.id.readmaintitle);
         tvid = findViewById(R.id.readmainusername);
         tvdate = findViewById(R.id.readmaindate);
         tvcontent = findViewById(R.id.readmaincontent);
         ivimg = findViewById(R.id.readmainpic);
+        commentet = findViewById(R.id.sendcomment);
+        commentbt = findViewById(R.id.commentbutton);
+        commentlistView = findViewById(R.id.comentlist);
 
         databaseReference.child("board").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
             @Override
@@ -98,10 +112,84 @@ public class ReadmainActivity extends AppCompatActivity {
             }
 
 
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
+        final ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        commentlistView.setAdapter(adapter);
+
+
+        commentbt.setOnClickListener((view) -> {
+            if (commentet.getText().toString().equals("")) {
+            } else {
+
+                Log.d("댓글댓글", id);
+                Log.d("댓글댓글", coupleid);
+                //Unique한 파일명을 만들자.
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_hh:mm");
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                String nowdate = formatter.format(date);
+
+                ChatData chatData = new ChatData(id, commentet.getText().toString(), coupleid, 0, nowdate);  // 유저 이름과 메세지로 chatData 만들기
+                databaseReference.child("board").child(key).child("comment").push().setValue(chatData);  // 기본 database 하위 message라는 child에 chatData를 list로 만들기
+                commentet.setText("");
+//                listView.setSelection(adapter.getCount()-1);
+            }
+        });
+
+        ChildEventListener childEventListener = databaseReference.child("board").child(key).child("comment").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("계속 실행되는거지?", "응그럴걸");
+                ChatData chatData = dataSnapshot.getValue(ChatData.class);// chatData를 가져오고
+                String readcheck = "";
+
+
+                if (chatData.getCoupleID().equals(coupleid)) {//커플아이디가 같아야 보이며
+
+
+                    adapter.add(chatData.getDate() + ") " + chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
+
+
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                ChatData chatData = dataSnapshot.getValue(ChatData.class);// chatData를 가져오고
+                String readcheck = "";
+
+
+                if (chatData.getCoupleID().equals(coupleid)) {//커플아이디가 같아야 보이며
+
+
+                    adapter.add(chatData.getDate() + ") " + chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
+
+
+
+                }
 
             }
 

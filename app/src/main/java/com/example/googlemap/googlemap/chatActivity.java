@@ -133,15 +133,6 @@ public class chatActivity extends Activity {
                                     .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE).setContentIntent(pendingNotificationIntent);
                             //해당 부분은 API 4.1버전부터 작동합니다.
 
-//setSmallIcon - > 작은 아이콘 이미지
-//setnumber-> 알람 숫자
-//setTicker - > 알람이 출력될 때 상단에 나오는 문구.
-
-//setWhen -> 알림 출력 시간.
-
-//setContentTitle-> 알림 제목
-
-//setConentText->푸쉬내용
 
                             notificationManager.notify(1, builder.build()); // Notification send
 

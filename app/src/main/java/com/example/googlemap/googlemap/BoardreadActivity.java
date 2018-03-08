@@ -37,7 +37,7 @@ public class BoardreadActivity extends AppCompatActivity {
     Adapter adapter;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
-
+    String key;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,7 @@ public class BoardreadActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 BoardData boardData = dataSnapshot.getValue(BoardData.class);// chatData를 가져오고
-
+                boardData.setKey(dataSnapshot.getKey());
                 Log.d("asdf",boardData.toString());
                 adapter.addItem(boardData);
                 listView.setAdapter(adapter);
@@ -112,6 +112,7 @@ public class BoardreadActivity extends AppCompatActivity {
                 readmain.putExtra("id",item.getID());
                 readmain.putExtra("date",item.getDate());
                 readmain.putExtra("title",item.getTitle());
+                readmain.putExtra("key",item.getKey());
                 startActivity(readmain);
 
 

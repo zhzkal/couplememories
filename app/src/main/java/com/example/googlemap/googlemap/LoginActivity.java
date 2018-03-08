@@ -43,12 +43,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Intent intent=getIntent();
 
 
-        databaseReference.child("board").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
+        databaseReference.child("board").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                boardData = dataSnapshot.getValue(BoardData.class);// chatData를 가져오고
+                boardData = dataSnapshot.getValue(BoardData.class);
                 float a = (float) boardData.getLatitude();
                 float b = (float) boardData.getLongitude();
                 //다운로드할 파일을 가르키는 참조 만들기
@@ -137,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("MainActivity", "ChildEventListener - onCancelled" + databaseError.getMessage());
             }
         });
+
 
     }
 

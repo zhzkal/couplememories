@@ -7,50 +7,80 @@
     android:orientation="vertical"
     tools:context="com.example.googlemap.googlemap.MainActivity">
 
-    <TextView
-        android:id="@+id/textview1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/ddayplus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="Hello World!" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/love" />
+
+        <TextView
+            android:id="@+id/nextdday"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="Hello World!" />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/bt1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="지도보기"
         android:onClick="buttonClick"
-        />
+        android:text="지도보기" />
 
     <Button
         android:id="@+id/bt2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="기억 공유하기"
         android:onClick="buttonClick"
+        android:text="기억 공유하기"
 
         />
+
     <Button
         android:id="@+id/bt3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="커플 채팅"
         android:onClick="buttonClick"
+        android:text="커플 채팅"
 
         />
+
     <Button
         android:id="@+id/bt4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="기억 읽어오기"
         android:onClick="buttonClick"
+        android:text="기억 읽어오기"
 
         />
+
     <Button
         android:id="@+id/btlogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="로그아웃"
         android:onClick="buttonClick"
+        android:text="로그아웃"
 
         />
 

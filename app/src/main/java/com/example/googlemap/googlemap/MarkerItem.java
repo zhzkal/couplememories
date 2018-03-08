@@ -1,10 +1,10 @@
 package com.example.googlemap.googlemap;
 
 import android.net.Uri;
-
 /**
- * Created by TedPark on 16. 4. 26..
+ * Created by SCITMASTER on 2018-03-08.
  */
+
 public class MarkerItem {
 
 
