@@ -42,9 +42,12 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     Gpsdata gpsdata;
     ArrayList<Gpsdata> gpslist = new ArrayList<>();
+    ArrayList<SpdayData> spdaylist=new ArrayList<>();
+
     ArrayList<Gpsdata> gpslist2 = new ArrayList<>();
     ArrayList<Uridata> urilist = new ArrayList<>();
     TextView maintitle;
+    TextView spday;
     ImageView background;
     String id;
     String coupleid;
@@ -54,21 +57,28 @@ public class MainActivity extends AppCompatActivity {
     TextView tvdday2;
     int firstday;
     String nextdaytext;
-
+    String key;
+    int minday=999999999;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Intent intent = getIntent();
         gpslist = (ArrayList<Gpsdata>) getIntent().getSerializableExtra("gpslist");
-
         id = intent.getStringExtra("id");
         coupleid = intent.getStringExtra("coupleid");
+        key = intent.getStringExtra("key");
+
+        Log.d("key값",key);
         maintitle = (TextView)findViewById(R.id.maintitle);
+        spday = (TextView)findViewById(R.id.spday);
         maintitle.setTypeface(Typeface.createFromAsset(getAssets(),"white.ttf"));
+
         /*ImageView background = (ImageView)findViewById(R.id.background);
         GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(background);
         Glide.with(this).load(R.drawable.background).into(gifImage);*/
+
         ImageView background = (ImageView)findViewById(R.id.background);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -128,7 +138,53 @@ public class MainActivity extends AppCompatActivity {
            // gpsdata=new Gpsdata(gpslist.get(i).getLatitude(),gpslist.get(i).getLongitude(),urilist.get(i).getUri());
             gpslist2.add(gpsdata);
         }*/
+        ChildEventListener childEventListener = databaseReference.child("member").child(key).child("spdaylist").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                SpdayData spdayData = dataSnapshot.getValue(SpdayData.class);// chatData를 가져오고
+                spdaylist.add(spdayData);
+                if(minday>Integer.parseInt(spdayData.getSpday())){
+                    minday =Integer.parseInt(spdayData.getSpday());
+                    Calendar todaCal = Calendar.getInstance(); //오늘날자 가져오기
+                    Calendar ddayCal = Calendar.getInstance(); //오늘날자를 가져와 변경시킴
+                    String year2 = String.valueOf(minday).substring(0, 4);
+                    String month2 = String.valueOf(minday).substring(4, 6);
+                    String day2 = String.valueOf(minday).substring(6, 8);
+
+                    ddayCal.set(Integer.parseInt(year2), Integer.parseInt(month2) - 1, Integer.parseInt(day2));// D-day의 날짜를 입력
+                    long today = todaCal.getTimeInMillis() / 86400000; //->(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
+                    long dday = ddayCal.getTimeInMillis() / 86400000;
+                    long count = today - dday; // 오늘 날짜에서 dday 날짜를 빼주게 됩니다.
+                    spday.setText(spdayData.getContent()+"까지"+"D-day-"+count);
+                }
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
     }
+
+
 
     public void buttonClick(View v) {
         switch (v.getId()) {
@@ -160,6 +216,13 @@ public class MainActivity extends AppCompatActivity {
                 // Write a message to the database
                 Intent intent5 = new Intent(this, BoardreadActivity.class);
                 startActivity(intent5);
+                break;
+            case R.id.bt5:
+                // Write a message to the database
+                Intent intent6 = new Intent(this, CalendarActivity.class);
+                intent6.putExtra("coupleid", coupleid);
+                intent6.putExtra("id", id);
+                startActivity(intent6);
                 break;
             case R.id.btlogout:
                 // Write a message to the database

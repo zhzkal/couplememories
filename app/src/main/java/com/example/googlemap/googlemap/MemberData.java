@@ -4,14 +4,30 @@ package com.example.googlemap.googlemap;
  * Created by SCITMASTER on 2018-02-28.
  */
 
-public class MemberData  {
+public class MemberData {
 
     String id;
     String pw;
     String name;
     String coupleid;
+    String spday;
 
+    public MemberData(String id, String pw, String name, String coupleid, String spday) {
+        this.id = id;
+        this.pw = pw;
+        this.name = name;
+        this.coupleid = coupleid;
+        this.spday = spday;
+    }
 
+    public String getSpday() {
+
+        return spday;
+    }
+
+    public void setSpday(String spday) {
+        this.spday = spday;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -62,5 +78,7 @@ public class MemberData  {
         this.name = name;
         this.coupleid = coupleid;
     }
-    MemberData(){}
+
+    MemberData() {
+    }
 }

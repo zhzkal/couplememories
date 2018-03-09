@@ -31,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     Uri uridata;
     Gpsdata gpsdata;
     ArrayList<Gpsdata> gpslist=new ArrayList<>();
+    ArrayList<SpdayData> spdaylist=new ArrayList<>();
+
     ArrayList<Uri> urilist=new ArrayList<Uri>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText pw;
     int check = 0;
     ArrayList<MemberData> memberdata = new ArrayList<>();
+    ArrayList<String> keylist = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                     MemberData a = dataSnapshot.getValue(MemberData.class);
 
                     memberdata.add(a);
+                    keylist.add(dataSnapshot.getKey());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,6 +142,9 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("MainActivity", "ChildEventListener - onCancelled" + databaseError.getMessage());
             }
         });
+
+
+
     }
 
 
@@ -155,10 +162,16 @@ public class LoginActivity extends AppCompatActivity {
                     if (memberdata.get(i).getId().equals(temp)) {
 
                         if (memberdata.get(i).getPw().equals(temppw)) {
+
+
+
+
+
                             Intent gomain = new Intent(this, MainActivity.class);
                             gomain.putExtra("id", String.valueOf(id.getText()));
                             gomain.putExtra("coupleid", memberdata.get(i).getCoupleid());
                             gomain.putExtra("gpslist",gpslist);
+                            gomain.putExtra("key",keylist.get(i));
                             //gomain.putExtra("urilist",urilist);
                             startActivity(gomain);
                             check = 1;

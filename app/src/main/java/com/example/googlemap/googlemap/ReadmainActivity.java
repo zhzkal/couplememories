@@ -67,7 +67,6 @@ public class ReadmainActivity extends AppCompatActivity {
         date = intent.getStringExtra("date");
         title = intent.getStringExtra("title");
         key = intent.getStringExtra("key");
-
         tvtitle = findViewById(R.id.readmaintitle);
         tvid = findViewById(R.id.readmainusername);
         tvdate = findViewById(R.id.readmaindate);
@@ -157,23 +156,17 @@ public class ReadmainActivity extends AppCompatActivity {
 //                listView.setSelection(adapter.getCount()-1);
             }
         });
-        if (key == null) {
-        } else {
+
             ChildEventListener childEventListener = databaseReference.child("board").child(key).child("comment").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Log.d("계속 실행되는거지?", "응그럴걸");
                     ChatData chatData = dataSnapshot.getValue(ChatData.class);// chatData를 가져오고
                     String readcheck = "";
+                    adapter.add(chatData.getDate() + ") " + chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
 
 
-                    if (chatData.getCoupleID().equals(coupleid)) {//커플아이디가 같아야 보이며
 
-
-                        adapter.add(chatData.getDate() + ") " + chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
-
-
-                    }
                 }
 
                 @Override
@@ -182,13 +175,11 @@ public class ReadmainActivity extends AppCompatActivity {
                     String readcheck = "";
 
 
-                    if (chatData.getCoupleID().equals(coupleid)) {//커플아이디가 같아야 보이며
-
 
                         adapter.add(chatData.getDate() + ") " + chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
 
 
-                    }
+
 
                 }
 
@@ -210,7 +201,7 @@ public class ReadmainActivity extends AppCompatActivity {
         }
 
 
-    }
+
 
 
 }
