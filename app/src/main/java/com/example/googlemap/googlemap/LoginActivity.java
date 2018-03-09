@@ -138,8 +138,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("MainActivity", "ChildEventListener - onCancelled" + databaseError.getMessage());
             }
         });
-
-
     }
 
 

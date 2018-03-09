@@ -3,6 +3,7 @@ package com.example.googlemap.googlemap;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -40,42 +41,44 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     Gpsdata gpsdata;
-    ArrayList<Gpsdata> gpslist=new ArrayList<>();
-    ArrayList<Gpsdata> gpslist2=new ArrayList<>();
-    ArrayList<Uridata> urilist=new ArrayList<>();
-    TextView tv;
+    ArrayList<Gpsdata> gpslist = new ArrayList<>();
+    ArrayList<Gpsdata> gpslist2 = new ArrayList<>();
+    ArrayList<Uridata> urilist = new ArrayList<>();
+    TextView maintitle;
     ImageView background;
     String id;
     String coupleid;
-    int ddaycount=0;
-    int nextdday=0;
+    int ddaycount = 0;
+    int nextdday = 0;
     TextView tvdday;
     TextView tvdday2;
     int firstday;
     String nextdaytext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         gpslist = (ArrayList<Gpsdata>) getIntent().getSerializableExtra("gpslist");
 
-        id=intent.getStringExtra("id");
-        coupleid=intent.getStringExtra("coupleid");
-
-
+        id = intent.getStringExtra("id");
+        coupleid = intent.getStringExtra("coupleid");
+        maintitle = (TextView)findViewById(R.id.maintitle);
+        maintitle.setTypeface(Typeface.createFromAsset(getAssets(),"white.ttf"));
         /*ImageView background = (ImageView)findViewById(R.id.background);
         GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(background);
         Glide.with(this).load(R.drawable.background).into(gifImage);*/
+        ImageView background = (ImageView)findViewById(R.id.background);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         String nowdate = formatter.format(date);
 //지금날짜
-        String year=nowdate.substring(0,4);
-        String month= nowdate.substring(4,6);
-        String day= nowdate.substring(6,8);
+        String year = nowdate.substring(0, 4);
+        String month = nowdate.substring(4, 6);
+        String day = nowdate.substring(6, 8);
 
 
         try {
@@ -83,41 +86,39 @@ public class MainActivity extends AppCompatActivity {
 
             Calendar todaCal = Calendar.getInstance(); //오늘날자 가져오기
             Calendar ddayCal = Calendar.getInstance(); //오늘날자를 가져와 변경시킴
-            String year2=coupleid.substring(0,4);
-            String month2= coupleid.substring(4,6);
-            String day2= coupleid.substring(6,8);
+            String year2 = coupleid.substring(0, 4);
+            String month2 = coupleid.substring(4, 6);
+            String day2 = coupleid.substring(6, 8);
 
-            ddayCal.set(Integer.parseInt(year2),Integer.parseInt(month2)-1,Integer.parseInt(day2));// D-day의 날짜를 입력
-            Log.e("테스트",simpleDateFormat.format(todaCal.getTime()) + "");
-            Log.e("테스트",simpleDateFormat.format(ddayCal.getTime()) + "");
+            ddayCal.set(Integer.parseInt(year2), Integer.parseInt(month2) - 1, Integer.parseInt(day2));// D-day의 날짜를 입력
+            Log.e("테스트", simpleDateFormat.format(todaCal.getTime()) + "");
+            Log.e("테스트", simpleDateFormat.format(ddayCal.getTime()) + "");
 
-            long today = todaCal.getTimeInMillis()/86400000; //->(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
-            long dday = ddayCal.getTimeInMillis()/86400000;
+            long today = todaCal.getTimeInMillis() / 86400000; //->(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
+            long dday = ddayCal.getTimeInMillis() / 86400000;
             long count = today - dday; // 오늘 날짜에서 dday 날짜를 빼주게 됩니다.
-            ddaycount= (int) count;
+            ddaycount = (int) count;
 
-            if(ddaycount%100>ddaycount%365){
-                firstday=ddaycount/365;
-                nextdday=  ddaycount%365;
-                nextdday=365-nextdday;
-                nextdaytext=firstday+"주년 -";
-            }else{
-                firstday=ddaycount/100;
-                firstday=firstday+1;
-                nextdday=ddaycount%100;
-                nextdday=100-nextdday;
-                nextdaytext=firstday+"00일 ";
+            if (ddaycount % 100 > ddaycount % 365) {
+                firstday = ddaycount / 365;
+                nextdday = ddaycount % 365;
+                nextdday = 365 - nextdday;
+                nextdaytext = firstday + "주년 -";
+            } else {
+                firstday = ddaycount / 100;
+                firstday = firstday + 1;
+                nextdday = ddaycount % 100;
+                nextdday = 100 - nextdday;
+                nextdaytext = firstday + "00일 ";
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
-        tvdday=findViewById(R.id.ddayplus);
-        tvdday.setText("D-day+"+ddaycount);
-        tvdday2=findViewById(R.id.nextdday);
-        tvdday2.setText(nextdaytext+"D-day-"+nextdday);
+        tvdday = findViewById(R.id.ddayplus);
+        tvdday.setText("D-day+" + ddaycount);
+        tvdday2 = findViewById(R.id.nextdday);
+        tvdday2.setText(nextdaytext + "D-day-" + nextdday);
 
         //urilist = (ArrayList<Uridata>) getIntent().getParcelableExtra("urilist");
        /* for (int i=0;i<gpslist.size();i++){
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent gomap = new Intent(this, MapsActivity.class);
                 gomap.putExtra("gpslist", gpslist);
                 gomap.putExtra("coupleid", coupleid);
-                gomap.putExtra("id",id);
+                gomap.putExtra("id", id);
                 startActivity(gomap);
                 break;
 
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent insertpicture = new Intent(this, com.example.googlemap.googlemap.insertpicture.class);
 
                 insertpicture.putExtra("coupleid", coupleid);
-                insertpicture.putExtra("id",id);
+                insertpicture.putExtra("id", id);
                 startActivity(insertpicture);
                 break;
 
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent chat = new Intent(this, com.example.googlemap.googlemap.chatActivity.class);
                 chat.putExtra("coupleid", coupleid);
-                chat.putExtra("id",id);
+                chat.putExtra("id", id);
                 startActivity(chat);
                 break;
 

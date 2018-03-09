@@ -78,6 +78,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 BoardData boardData = dataSnapshot.getValue(BoardData.class);// chatData를 가져오고
+                boardData.setKey(dataSnapshot.getKey());
+                Log.d("왜 다 같음?",boardData.getKey());
                 boardlist.add(boardData);
             }
 
@@ -206,25 +208,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onMarkerClick(Marker marker) {
         String pic=null;
         String title = null;
-        String content=null;
-        String id = null;
+        String content=null;String date=null;
+        String id = null;String coupleid = null;
+        String key ="";
         CameraUpdate center = CameraUpdateFactory.newLatLng(marker.getPosition());
         mMap.animateCamera(center);
 
         changeSelectedMarker(marker);
 
         //마커에서 제목가져오고
-        marker.getTitle();
         for (int i = 0; i < boardlist.size(); i++) {
-            if (boardlist.get(i).getTitle().equals(marker.getTitle())) {
+
+            if (boardlist.get(i).getTitle().equals(marker.getTitle())&&boardlist.get(i).getLatitude()==marker.getPosition().latitude) {
                 pic = boardlist.get(i).getPicture();
                 title = boardlist.get(i).getTitle();
                 content = boardlist.get(i).getContent();
                 id = boardlist.get(i).getID();
-
+                coupleid= boardlist.get(i).getCoupleid();
+                date = boardlist.get(i).getDate();
+                key =boardlist.get(i).getKey();
+                Log.d("키값!!",key);
+                break;
             }
         }
 
+       Intent readmain = new Intent(MapsActivity.this, com.example.googlemap.googlemap.ReadmainActivity.class);
+
+        readmain.putExtra("coupleid", coupleid);
+        readmain.putExtra("id",id);
+        readmain.putExtra("date",date);
+        readmain.putExtra("title",title);
+        readmain.putExtra("key",key);
+        startActivity(readmain);
 
        /* BoardItemView view = new BoardItemView(getApplicationContext());
         view.setName(title);//title
@@ -256,12 +271,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tempinfo.findViewById(R.id.textView);
         tempinfo.findViewById(R.id.textView2);
         tempinfo.findViewById(R.id.textView3);*/
-
         //그 제목가지고 board데이터에서 글 찾고
         //사진 제목 내용 작성자 정도 가져오자
-
         //그리고 쏴주자
-
         return true;
     }
 
@@ -272,16 +284,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             addMarker(selectedMarker, false);
             selectedMarker.remove();
         }
-
         // 선택한 마커 표시
         if (marker != null) {
             selectedMarker = addMarker(marker, true);
             marker.remove();
         }
-
-
     }
-
 
     @Override
     public void onMapClick(LatLng latLng) {
