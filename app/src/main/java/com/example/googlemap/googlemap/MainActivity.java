@@ -2,6 +2,7 @@ package com.example.googlemap.googlemap;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -11,9 +12,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -24,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Gpsdata> gpslist2=new ArrayList<>();
     ArrayList<Uridata> urilist=new ArrayList<>();
     TextView tv;
+    ImageView background;
     String id;
     String coupleid;
     int ddaycount=0;
@@ -57,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
         id=intent.getStringExtra("id");
         coupleid=intent.getStringExtra("coupleid");
 
+
+        /*ImageView background = (ImageView)findViewById(R.id.background);
+        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(background);
+        Glide.with(this).load(R.drawable.background).into(gifImage);*/
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         long now = System.currentTimeMillis();
@@ -96,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 firstday=firstday+1;
                 nextdday=ddaycount%100;
                 nextdday=100-nextdday;
-                nextdaytext=firstday+"00일 -";
+                nextdaytext=firstday+"00일 ";
             }
         }
         catch (Exception e)
@@ -107,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         tvdday=findViewById(R.id.ddayplus);
         tvdday.setText("D-day+"+ddaycount);
         tvdday2=findViewById(R.id.nextdday);
-        tvdday2.setText(nextdaytext+nextdday);
+        tvdday2.setText(nextdaytext+"D-day-"+nextdday);
 
         //urilist = (ArrayList<Uridata>) getIntent().getParcelableExtra("urilist");
        /* for (int i=0;i<gpslist.size();i++){
@@ -124,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.bt1:
                 Intent gomap = new Intent(this, MapsActivity.class);
                 gomap.putExtra("gpslist", gpslist);
+                gomap.putExtra("coupleid", coupleid);
+                gomap.putExtra("id",id);
                 startActivity(gomap);
                 break;
 

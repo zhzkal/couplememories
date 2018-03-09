@@ -6,14 +6,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +30,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -33,21 +48,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker selectedMarker;
     View marker_root_view;
     TextView tv_marker;
-
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    ArrayList<BoardData> boardlist = new ArrayList<>();
+    View tempinfo;
     ArrayList<Gpsdata> gpslist;
     private GoogleMap mMap;
-
+    String userName;
+    String coupleid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+
         Intent intent = getIntent();
+        userName = intent.getStringExtra("id");
+        coupleid = intent.getStringExtra("coupleid");
+
         gpslist = (ArrayList<Gpsdata>) getIntent().getSerializableExtra("gpslist");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        databaseReference.child("board").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                BoardData boardData = dataSnapshot.getValue(BoardData.class);// chatData를 가져오고
+                boardlist.add(boardData);
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
+
     }
 
     @Override
@@ -86,7 +144,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     private Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
 
         LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
@@ -117,8 +174,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
     // View를 Bitmap으로 변환
     private Bitmap createDrawableFromView(Context context, View view) {
 
@@ -147,19 +202,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     @Override
     public boolean onMarkerClick(Marker marker) {
-
+        String pic=null;
+        String title = null;
+        String content=null;
+        String id = null;
         CameraUpdate center = CameraUpdateFactory.newLatLng(marker.getPosition());
         mMap.animateCamera(center);
 
         changeSelectedMarker(marker);
 
+        //마커에서 제목가져오고
+        marker.getTitle();
+        for (int i = 0; i < boardlist.size(); i++) {
+            if (boardlist.get(i).getTitle().equals(marker.getTitle())) {
+                pic = boardlist.get(i).getPicture();
+                title = boardlist.get(i).getTitle();
+                content = boardlist.get(i).getContent();
+                id = boardlist.get(i).getID();
+
+            }
+        }
+
+
+       /* BoardItemView view = new BoardItemView(getApplicationContext());
+        view.setName(title);//title
+        view.setAge(id);//id
+        view.setMobile(content);//content
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReferenceFromUrl("gs://couplememories-196504.appspot.com");
+
+        //다운로드할 파일을 가르키는 참조 만들기
+        StorageReference pathReference = storageReference.child(pic);
+        //Url을 다운받기
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Toast.makeText(getApplicationContext(), "다운로드 성공 : "+ uri, Toast.LENGTH_SHORT).show();
+
+                view.setImage(uri);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "다운로드 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
+        tempinfo=view;*/
+/*
+        tempinfo=   LayoutInflater.from(this).inflate(R.layout.board_item, null);
+        tempinfo.findViewById(R.id.imageView);
+        tempinfo.findViewById(R.id.textView);
+        tempinfo.findViewById(R.id.textView2);
+        tempinfo.findViewById(R.id.textView3);*/
+
+        //그 제목가지고 board데이터에서 글 찾고
+        //사진 제목 내용 작성자 정도 가져오자
+
+        //그리고 쏴주자
 
         return true;
     }
-
 
 
     private void changeSelectedMarker(Marker marker) {

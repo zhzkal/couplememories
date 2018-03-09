@@ -60,8 +60,6 @@ public class BoardreadActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-
             }
 
             @Override

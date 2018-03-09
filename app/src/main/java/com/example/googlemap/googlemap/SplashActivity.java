@@ -1,6 +1,9 @@
 package com.example.googlemap.googlemap;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,10 +37,41 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
+
+        //Log.e("imgClick: ", "권한체크 하는지 ");
+        if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            Log.e("imgClick: ", "권한 없음");
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                    1000);
+        }
+
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            Log.e("imgClick: ", "권한 없음");
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    1001);
+        }
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            Log.e("imgClick: ", "권한 없음");
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1001);
+        }
         Intent intent = new Intent(this, LoginActivity.class);
 
         startActivity(intent);
         finish();
     }
+
+
+
+
+
+
 }
 
