@@ -21,6 +21,7 @@ public class BoardItemView extends LinearLayout {
     TextView textView3;
     ImageView imageView;
 
+
     public BoardItemView(Context context) {
         super(context);
 
